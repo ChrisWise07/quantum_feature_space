@@ -1,0 +1,131 @@
+\begin{thebibliography}{10}
+
+\bibitem{bravyi2018correcting}
+Sergey Bravyi, Matthias Englbrecht, Robert K{\"o}nig, and Nolan Peard.
+\newblock Correcting coherent errors with surface codes.
+\newblock {\em npj Quantum Information}, 4(1):1--6, 2018.
+
+\bibitem{viola1999dynamical}
+Lorenza Viola, Emanuel Knill, and Seth Lloyd.
+\newblock Dynamical decoupling of open quantum systems.
+\newblock {\em Physical Review Letters}, 82(12):2417, 1999.
+
+\bibitem{degen2017quantum}
+Christian~L Degen, Friedemann Reinhard, and Paola Cappellaro.
+\newblock Quantum sensing.
+\newblock {\em Reviews of modern physics}, 89(3):035002, 2017.
+
+\bibitem{boss2016one}
+Jens~M Boss, Kevin Chang, Julien Armijo, Kristian Cujia, Tobias Rosskopf, Jer{\'o}nimo~R Maze, and Christian~L Degen.
+\newblock One-and two-dimensional nuclear magnetic resonance spectroscopy with a diamond quantum sensor.
+\newblock {\em Physical review letters}, 116(19):197601, 2016.
+
+\bibitem{carr1954effects}
+Herman~Y Carr and Edward~M Purcell.
+\newblock Effects of diffusion on free precession in nuclear magnetic resonance experiments.
+\newblock {\em Physical review}, 94(3):630, 1954.
+
+\bibitem{meiboom1958modified}
+Saul Meiboom and David Gill.
+\newblock Modified spin-echo method for measuring nuclear relaxation times.
+\newblock {\em Review of scientific instruments}, 29(8):688--691, 1958.
+
+\bibitem{alvarez2011measuring}
+Gonzalo~A {\'A}lvarez and Dieter Suter.
+\newblock Measuring the spectrum of colored noise by dynamical decoupling.
+\newblock {\em Physical review letters}, 107(23):230501, 2011.
+
+\bibitem{von2020two}
+Uwe von L{\"u}pke, F{\'e}lix Beaudoin, Leigh~M Norris, Youngkyu Sung, Roni Winik, Jack~Y Qiu, Morten Kjaergaard, David Kim, Jonilyn Yoder, Simon Gustavsson, et~al.
+\newblock Two-qubit spectroscopy of spatiotemporally correlated quantum noise in superconducting qubits.
+\newblock {\em PRX Quantum}, 1(1):010305, 2020.
+
+\bibitem{sun2022self}
+Won Kyu~Calvin Sun and Paola Cappellaro.
+\newblock Self-consistent noise characterization of quantum devices.
+\newblock {\em Physical Review B}, 106(15):155413, 2022.
+
+\bibitem{wise2021using}
+David~F Wise, John~JL Morton, and Siddharth Dhomkar.
+\newblock Using deep learning to understand and mitigate the qubit noise environment.
+\newblock {\em PRX Quantum}, 2(1):010316, 2021.
+
+\bibitem{martina2021machine}
+Stefano Martina, Stefano Gherardini, and Filippo Caruso.
+\newblock Machine learning approach for quantum non-markovian noise classification.
+\newblock {\em arXiv preprint arXiv:2101.03221}, 2021.
+
+\bibitem{baroni2022nuclear}
+Alessandro Baroni, Joseph Carlson, Rajan Gupta, Andy~CY Li, Gabriel~N Perdue, and Alessandro Roggero.
+\newblock Nuclear two point correlation functions on a quantum computer.
+\newblock {\em Physical Review D}, 105(7):074503, 2022.
+
+\bibitem{martina2023deep}
+Stefano Martina, Santiago Hern{\'a}ndez-G{\'o}mez, Stefano Gherardini, Filippo Caruso, and Nicole Fabbri.
+\newblock Deep learning enhanced noise spectroscopy of a spin qubit environment.
+\newblock {\em arXiv preprint arXiv:2301.05079}, 2023.
+
+\bibitem{vezvaee2022noise}
+Arian Vezvaee, Nanako Shitara, Shuo Sun, and Andr{\'e}s Montoya-Castillo.
+\newblock Noise spectroscopy without dynamical decoupling pulses.
+\newblock {\em arXiv preprint arXiv:2210.00386}, 2022.
+
+\bibitem{youssry2020characterization}
+Akram Youssry, Gerardo~A Paz-Silva, and Christopher Ferrie.
+\newblock Characterization and control of open quantum systems beyond quantum noise spectroscopy.
+\newblock {\em npj Quantum Information}, 6(1):95, 2020.
+
+\bibitem{youssry2022multi}
+Akram Youssry and Hendra~I Nurdin.
+\newblock Multi-axis control of a qubit in the presence of unknown non-markovian quantum noise.
+\newblock {\em Quantum Science and Technology}, 8(1):015018, 2022.
+
+\bibitem{seedhouse2023spatio}
+Amanda~E Seedhouse, Nard~Dumoulin Stuyck, Santiago Serrano, Tuomo Tanttu, Will Gilbert, Jonathan~Yue Huang, Fay~E Hudson, Kohei~M Itoh, Arne Laucht, Wee~Han Lim, et~al.
+\newblock Spatio-temporal correlations of noise in mos spin qubits.
+\newblock {\em arXiv preprint arXiv:2309.12542}, 2023.
+
+\bibitem{nakamura2024gate}
+Kiyoto Nakamura and Joachim Ankerhold.
+\newblock Gate operations for superconducting qubits and non-markovianity: Fidelities, long-range time correlations, and suppression of decoherence.
+\newblock {\em arXiv preprint arXiv:2402.18518}, 2024.
+
+\bibitem{sung2019non}
+Youngkyu Sung, F{\'e}lix Beaudoin, Leigh~M Norris, Fei Yan, David~K Kim, Jack~Y Qiu, Uwe von L{\"u}pke, Jonilyn~L Yoder, Terry~P Orlando, Simon Gustavsson, et~al.
+\newblock Non-gaussian noise spectroscopy with a superconducting qubit sensor.
+\newblock {\em Nature communications}, 10(1):3715, 2019.
+
+\bibitem{paz2017multiqubit}
+Gerardo~A Paz-Silva, Leigh~M Norris, and Lorenza Viola.
+\newblock Multiqubit spectroscopy of gaussian quantum noise.
+\newblock {\em Physical review a}, 95(2):022121, 2017.
+
+\bibitem{nielsen2002quantum}
+Michael~A Nielsen and Isaac Chuang.
+\newblock Quantum computation and quantum information, 2002.
+
+\bibitem{penrose1955generalized}
+Roger Penrose.
+\newblock A generalized inverse for matrices.
+\newblock In {\em Mathematical proceedings of the Cambridge philosophical society}, volume~51, pages 406--413. Cambridge University Press, 1955.
+
+\bibitem{paszke2019pytorch}
+Adam Paszke, Sam Gross, Francisco Massa, Adam Lerer, James Bradbury, Gregory Chanan, Trevor Killeen, Zeming Lin, Natalia Gimelshein, Luca Antiga, et~al.
+\newblock Pytorch: An imperative style, high-performance deep learning library.
+\newblock {\em Advances in neural information processing systems}, 32, 2019.
+
+\bibitem{perrier2022qdataset}
+Elija Perrier, Akram Youssry, and Chris Ferrie.
+\newblock Qdataset, quantum datasets for machine learning.
+\newblock {\em Scientific Data}, 9(1):582, 2022.
+
+\bibitem{james2013introduction}
+Gareth James.
+\newblock An introduction to statistical learning, 2013.
+
+\bibitem{scikit-learn}
+F.~Pedregosa, G.~Varoquaux, A.~Gramfort, V.~Michel, B.~Thirion, O.~Grisel, M.~Blondel, P.~Prettenhofer, R.~Weiss, V.~Dubourg, J.~Vanderplas, A.~Passos, D.~Cournapeau, M.~Brucher, M.~Perrot, and E.~Duchesnay.
+\newblock Scikit-learn: Machine learning in {P}ython.
+\newblock {\em Journal of Machine Learning Research}, 12:2825--2830, 2011.
+
+\end{thebibliography}
