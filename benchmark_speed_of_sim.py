@@ -11,7 +11,7 @@ from qubit_sim.noise_gen_classes import (
     CombinedNoiseGenerator,
 )
 
-from .data_gen.data_gen_sim_constants import (
+from data_gen.data_gen_sim_constants import (
     NUM_TIME_STEPS,
     STANDARD_QUBIT_SIM,
     TOTAL_TIME,
