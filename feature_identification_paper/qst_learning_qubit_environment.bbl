@@ -50,10 +50,10 @@ David~F Wise, John~JL Morton, and Siddharth Dhomkar.
 \newblock Using deep learning to understand and mitigate the qubit noise environment.
 \newblock {\em PRX Quantum}, 2(1):010316, 2021.
 
-\bibitem{martina2021machine}
+\bibitem{martina2023machine}
 Stefano Martina, Stefano Gherardini, and Filippo Caruso.
-\newblock Machine learning approach for quantum non-markovian noise classification.
-\newblock {\em arXiv preprint arXiv:2101.03221}, 2021.
+\newblock Machine learning classification of non-markovian noise disturbing quantum dynamics.
+\newblock {\em Physica Scripta}, 98(3):035104, 2023.
 
 \bibitem{baroni2022nuclear}
 Alessandro Baroni, Joseph Carlson, Rajan Gupta, Andy~CY Li, Gabriel~N Perdue, and Alessandro Roggero.
@@ -63,12 +63,12 @@ Alessandro Baroni, Joseph Carlson, Rajan Gupta, Andy~CY Li, Gabriel~N Perdue, an
 \bibitem{martina2023deep}
 Stefano Martina, Santiago Hern{\'a}ndez-G{\'o}mez, Stefano Gherardini, Filippo Caruso, and Nicole Fabbri.
 \newblock Deep learning enhanced noise spectroscopy of a spin qubit environment.
-\newblock {\em arXiv preprint arXiv:2301.05079}, 2023.
+\newblock {\em Machine Learning: Science and Technology}, 4(2):02LT01, 2023.
 
-\bibitem{vezvaee2022noise}
+\bibitem{vezvaee2024fourier}
 Arian Vezvaee, Nanako Shitara, Shuo Sun, and Andr{\'e}s Montoya-Castillo.
-\newblock Noise spectroscopy without dynamical decoupling pulses.
-\newblock {\em arXiv preprint arXiv:2210.00386}, 2022.
+\newblock Fourier transform noise spectroscopy.
+\newblock {\em npj Quantum Information}, 10(1):52, 2024.
 
 \bibitem{youssry2020characterization}
 Akram Youssry, Gerardo~A Paz-Silva, and Christopher Ferrie.
@@ -80,15 +80,15 @@ Akram Youssry and Hendra~I Nurdin.
 \newblock Multi-axis control of a qubit in the presence of unknown non-markovian quantum noise.
 \newblock {\em Quantum Science and Technology}, 8(1):015018, 2022.
 
-\bibitem{seedhouse2023spatio}
-Amanda~E Seedhouse, Nard~Dumoulin Stuyck, Santiago Serrano, Tuomo Tanttu, Will Gilbert, Jonathan~Yue Huang, Fay~E Hudson, Kohei~M Itoh, Arne Laucht, Wee~Han Lim, et~al.
-\newblock Spatio-temporal correlations of noise in mos spin qubits.
-\newblock {\em arXiv preprint arXiv:2309.12542}, 2023.
+\bibitem{seedhouse2025wavelet}
+Amanda~E Seedhouse, Nard~Dumoulin Stuyck, Santiago Serrano, Will Gilbert, Jonathan~Yue Huang, Fay~E Hudson, Kohei~M Itoh, Arne Laucht, Wee~Han Lim, Chih~Hwan Yang, et~al.
+\newblock Wavelet correlation noise analysis for qubit operation variable time series.
+\newblock {\em Scientific Reports}, 15(1):11065, 2025.
 
 \bibitem{nakamura2024gate}
 Kiyoto Nakamura and Joachim Ankerhold.
-\newblock Gate operations for superconducting qubits and non-markovianity: Fidelities, long-range time correlations, and suppression of decoherence.
-\newblock {\em arXiv preprint arXiv:2402.18518}, 2024.
+\newblock Gate operations for superconducting qubits and non-markovianity.
+\newblock {\em Physical Review Research}, 6(3):033215, 2024.
 
 \bibitem{sung2019non}
 Youngkyu Sung, F{\'e}lix Beaudoin, Leigh~M Norris, Fei Yan, David~K Kim, Jack~Y Qiu, Uwe von L{\"u}pke, Jonilyn~L Yoder, Terry~P Orlando, Simon Gustavsson, et~al.
@@ -127,5 +127,25 @@ Gareth James.
 F.~Pedregosa, G.~Varoquaux, A.~Gramfort, V.~Michel, B.~Thirion, O.~Grisel, M.~Blondel, P.~Prettenhofer, R.~Weiss, V.~Dubourg, J.~Vanderplas, A.~Passos, D.~Cournapeau, M.~Brucher, M.~Perrot, and E.~Duchesnay.
 \newblock Scikit-learn: Machine learning in {P}ython.
 \newblock {\em Journal of Machine Learning Research}, 12:2825--2830, 2011.
+
+\bibitem{bengio2013representation}
+Yoshua Bengio, Aaron Courville, and Pascal Vincent.
+\newblock Representation learning: A review and new perspectives.
+\newblock {\em IEEE transactions on pattern analysis and machine intelligence}, 35(8):1798--1828, 2013.
+
+\bibitem{radford2015unsupervised}
+Alec Radford, Luke Metz, and Soumith Chintala.
+\newblock Unsupervised representation learning with deep convolutional generative adversarial networks.
+\newblock {\em arXiv preprint arXiv:1511.06434}, 2015.
+
+\bibitem{guo2024smooth}
+Jiayi Guo, Xingqian Xu, Yifan Pu, Zanlin Ni, Chaofei Wang, Manushree Vasu, Shiji Song, Gao Huang, and Humphrey Shi.
+\newblock Smooth diffusion: Crafting smooth latent spaces in diffusion models.
+\newblock In {\em Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition}, pages 7548--7558, 2024.
+
+\bibitem{higgins2017beta}
+Irina Higgins, Loic Matthey, Arka Pal, Christopher Burgess, Xavier Glorot, Matthew Botvinick, Shakir Mohamed, and Alexander Lerchner.
+\newblock beta-vae: Learning basic visual concepts with a constrained variational framework.
+\newblock In {\em International conference on learning representations}, 2017.
 
 \end{thebibliography}
