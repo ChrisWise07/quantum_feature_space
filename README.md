@@ -4,7 +4,7 @@
 
 
 ## Overview
-This is the repository for the paper *'Quantum Feature Space of Qubit in Arbitrary Bath'*, found here: [arXiv](https://arxiv.org/abs/1234.56789) 
+This is the repository for the paper *'Quantum Feature Space of Qubit in Arbitrary Bath'*, found here: https://arxiv.org/abs/2505.03397 
 
 This project  introduces and implements the **Quantum Feature Space**, an efficient parameterization for describing the impact of environmental noise on qubit dynamics. It serves as an alternative to traditional power spectral density methods or computationally intensive neural network approaches for inferring noise operators.
 
