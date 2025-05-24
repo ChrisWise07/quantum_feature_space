@@ -35,7 +35,7 @@
 \ead{c.wise@unswalumni.com}
 
 \begin{abstract}
- Qubit control protocols have traditionally leveraged a characterisation of the qubit-bath coupling via its power spectral density. Previous work proposed the inference of noise operators that characterise the influence of a classical bath using a grey-box approach that combines deep neural networks with physics-encoded layers. This overall structure is complex and poses challenges in scaling and real-time operations. Here, we show that no expensive neural networks are needed and that this noise operator description admits an efficient parameterisation. We refer to the resulting parameter space as the \textit{quantum feature space} of the qubit dynamics resulting from the coupled bath. We show that the Euclidean distance defined over the quantum feature space provides an effective method for classifying noise processes in the presence of a given set of controls. Using the quantum feature space as the input space for a simple machine learning algorithm (random forest, in this case), we demonstrate that it can effectively classify the stationarity and the broad class of noise processes perturbing a qubit. Finally, we explore how control pulse parameters map to the quantum feature space.
+    Qubit control protocols have traditionally leveraged a characterisation of the qubit-bath coupling via its power spectral density. Previous work proposed the inference of noise operators that characterise the influence of a classical bath using a grey-box approach that combines deep neural networks with physics-encoded layers. This overall structure is complex and poses challenges in scaling and real-time operations. Here, we show that no expensive neural networks are needed and that this noise operator description admits an efficient parameterisation. We refer to the resulting parameter space as the \textit{quantum feature space} of the qubit dynamics resulting from the coupled bath. We show that the Euclidean distance defined over the quantum feature space provides an effective method for classifying noise processes in the presence of a given set of controls. Using the quantum feature space as the input space for a simple machine learning algorithm (random forest, in this case), we demonstrate that it can effectively classify the stationarity and the broad class of noise processes perturbing a qubit. Finally, we explore how control pulse parameters map to the quantum feature space.
 \end{abstract}
 
 \vspace{2pc}
@@ -80,56 +80,56 @@ We introduce in this paper \textit{quantum feature spaces}, which encode the bat
 The Hamiltonian describing a controlled qubit (the system) interacting with a bath is,
 \begin{equation}
     \label{eq:total_hamiltonian}
- H(t) = H_{ctrl}(t) + H_{SB}(t)
+    H(t) = H_{ctrl}(t) + H_{SB}(t)
 \end{equation}
 where the control Hamiltonian is,
 \begin{equation}
     \label{eq:control_hamiltonian}
- H_{\mathrm{ctrl}}(t)=\Omega \frac{\sigma_{z}}{2}+\sum_{j=\{x, y, z\}} f_{j}(t) \frac{\sigma_{j}}{2}
+    H_{\mathrm{ctrl}}(t)=\Omega \frac{\sigma_{z}}{2}+\sum_{j=\{x, y, z\}} f_{j}(t) \frac{\sigma_{j}}{2}
 \end{equation}
 where $\Omega$ is the qubit's energy gap and $f_j(t)$ is a control pulse along the given axis, and the system-bath Hamiltonian is,
 \begin{equation}
     \label{eq:system_bath_hamiltonian}
- H_{SB}(t) = \sum_{j=x, y, z} \sigma_{j} \otimes B_{j}(t)
+    H_{SB}(t) = \sum_{j=x, y, z} \sigma_{j} \otimes B_{j}(t)
 \end{equation}
 with $B_{j}(t)=\hat{B}_{j}(t)+\beta_{j}(t) I_{B}$ capturing a quantum bath via the operator $\hat{B}_{j}(t)$ and classical noise via the stochastic process $\beta_{j}(t)$.
 
 We are interested in the expected value of a system (qubit) observable $O$ at time $T$ given an initial system (qubit) state $\rho$, where $T$ represents the total time of the control pulse sequence. This is given by,
 \begin{equation} \label{eq:initial_expectation}
- \mathbb{E}\{O(T)\}_{\rho}=\left\langle\mathrm{Tr}\left[U(T)\left(\rho \otimes \rho_{B}\right) U(T)^{\dagger} O\right]\right\rangle
+    \mathbb{E}\{O(T)\}_{\rho}=\left\langle\mathrm{Tr}\left[U(T)\left(\rho \otimes \rho_{B}\right) U(T)^{\dagger} O\right]\right\rangle
 \end{equation}
 where $U(T)=\mathcal{T} e^{-i \int_{0}^{T} H(s) \, ds}$ is the time-ordered exponential of the time-dependent Hamiltonian in~\cref{eq:total_hamiltonian}, $\langle\cdot\rangle$ denotes classical averaging over realisations of the random processes $\beta_{j}(t)$, and $\rho_{B}$ is the initial state of the bath.
 
 We then decompose the total system-bath evolution into a product of system-bath dynamics and control dynamics. To do this, Paz-Silva, Norris, and Lorenza~\cite{paz2017multiqubit} used a so-called \textit{toggling frame}, defined by the time-ordered control unitary,
 \begin{equation} \label{eq:control_unitary_construction}
- U_{\mathrm{ctrl}}(t)=\mathcal{T} e^{-i \int_0^t H_{\mathrm{ctrl}}(s) \, ds}
+    U_{\mathrm{ctrl}}(t)=\mathcal{T} e^{-i \int_0^t H_{\mathrm{ctrl}}(s) \, ds}
 \end{equation}
 The system-bath Hamiltonian in this toggling frame is,
 \begin{equation}\label{eq:interaction_hamiltonian}
- H_{\mathrm{SB}}^{\mathrm{tog}}(t) = U_{\mathrm{ctrl}}^{\dagger}(t) H_{\mathrm{SB}}(t) U_{\mathrm{ctrl}}(t)
+    H_{\mathrm{SB}}^{\mathrm{tog}}(t) = U_{\mathrm{ctrl}}^{\dagger}(t) H_{\mathrm{SB}}(t) U_{\mathrm{ctrl}}(t)
 \end{equation}
 with the associated unitary,
 \begin{equation}\label{eq:interaction_unitary}
- U_{\mathrm{SB}}^{\mathrm{tog}}(t)=\mathcal{T} e^{-i \int_0^t H_{\mathrm{SB}}^{\mathrm{tog}}(s) \, ds}
+    U_{\mathrm{SB}}^{\mathrm{tog}}(t)=\mathcal{T} e^{-i \int_0^t H_{\mathrm{SB}}^{\mathrm{tog}}(s) \, ds}
 \end{equation}
 It can be shown that,
 \begin{equation}\label{eq:final_interaction_unitary}
- {U}_{\mathrm{SB}}(t)=U_{\mathrm{ctrl}}(t)  U_{\mathrm{SB}}^{\mathrm{tog}}(t) U_{\mathrm{ctrl}}^{\dagger}(t)
+    {U}_{\mathrm{SB}}(t)=U_{\mathrm{ctrl}}(t)  U_{\mathrm{SB}}^{\mathrm{tog}}(t) U_{\mathrm{ctrl}}^{\dagger}(t)
 \end{equation}
 which allows us to rewrite~\cref{eq:initial_expectation} as,
 \begin{equation} \label{eq:expectation_with_noise}
- \mathbb{E}\{O(T)\}_\rho=\mathrm{Tr}\left[V_O(T) U_{\mathrm{ctrl}}(T) \rho U_{\mathrm{ctrl}}(T)^{\dagger} O\right]
+    \mathbb{E}\{O(T)\}_\rho=\mathrm{Tr}\left[V_O(T) U_{\mathrm{ctrl}}(T) \rho U_{\mathrm{ctrl}}(T)^{\dagger} O\right]
 \end{equation}
 where
 \begin{equation} \label{eq:VO_construction}
- V_{O}(T)=\left\langle O^{-1} {U}_{\mathrm{SB}}^{\dagger}(T) O {U}_{\mathrm{SB}}(T)\right\rangle_{B}
+    V_{O}(T)=\left\langle O^{-1} {U}_{\mathrm{SB}}^{\dagger}(T) O {U}_{\mathrm{SB}}(T)\right\rangle_{B}
 \end{equation}
 with $\left\langle \cdot \right\rangle_{B}=\left\langle\mathrm{Tr}_{B}\left[\cdot \rho_{B}\right]\right\rangle$ representing classical averaging over the partial trace taken with respect to the bath. Physically, we interpret $V_{O}$ as a so-called \textit{noise operator} that encodes the influence of the system-bath interaction on qubit dynamics.
 
 \subsection{Decomposition of the System-Bath Operator \label{subsec:decomposition_of_vo}}
 When our system-bath Hamiltonian consists of only classical noise processes, one can move $O^{-1}$ in~\cref{eq:VO_construction}, and write,
 \begin{equation} \label{eq:VO_construction_1}
- V_O=O^{-1}\left\langle U_{\mathrm{SB}}^{\dagger} O U_{\mathrm{SB}}\right\rangle
+    V_O=O^{-1}\left\langle U_{\mathrm{SB}}^{\dagger} O U_{\mathrm{SB}}\right\rangle
 \end{equation}
 where the time arguments $T$ have been omitted for brevity. Before continuing, it is important to note some of the mathematical properties of the $V_O$ operator as they subsequently inform restrictions on its parameterisation. Specifically, $\left\langle U_{\mathrm{SB}}^{\dagger} O U_{\mathrm{SB}}\right\rangle$ is trace bounded by one, is Hermitian, and has real eigenvalues between $-1$ and $1$~\cite{youssry2020characterization}.
 
@@ -137,26 +137,26 @@ where the time arguments $T$ have been omitted for brevity. Before continuing, i
 
 An efficient parameterisation of $V_O$ is provided by its eigendecomposition. This eigendecomposition contains a diagonal matrix $D_O$ whose entries are real numbers in the interval $[-1, 1]$ and whose sum also lies in the interval $[-1, 1]$, and a general unitary matrix $Q$. Thus~\cref{eq:VO_construction_1} can be rewritten as
 \begin{equation} \label{eq:VO_construction_2}
- V_{O} = O^{-1}Q_{O}D_{O}Q_{O}^{\dagger}
+    V_{O} = O^{-1}Q_{O}D_{O}Q_{O}^{\dagger}
 \end{equation}
 In the case of a qubit, we start with a factorisation of a general $2 \times 2$ unitary operator,
 \begin{equation} \label{eq:Q_construction}
- Q_{O}=\left[ \begin{array}{cc}
- e^{i \psi_O} & 0             \\
+    Q_{O}=\left[ \begin{array}{cc}
+            e^{i \psi_O} & 0             \\
             0            & e^{-i \psi_O}
         \end{array} \right]
- \left[ \begin{array}{cc}
- \cos \theta_O  & \sin \theta_O \\
- -\sin \theta_O & \cos \theta_O
+    \left[ \begin{array}{cc}
+            \cos \theta_O  & \sin \theta_O \\
+            -\sin \theta_O & \cos \theta_O
         \end{array} \right]
- \left[ \begin{array}{cc}
- e^{i \Delta_O} & 0               \\
+    \left[ \begin{array}{cc}
+            e^{i \Delta_O} & 0               \\
             0              & e^{-i \Delta_O}
         \end{array} \right]\
 \end{equation}
 where $\psi_O, \theta_O, \Delta_O \in \mathbb{R}$ and the diagonal matrix $D_O$ of~\cref{eq:VO_construction_2} is constructed as
 \begin{equation} \label{eq:D_construction}
- D_{O}=\left[ \begin{array}{cc}
+    D_{O}=\left[ \begin{array}{cc}
             \mu_O & 0      \\
             0     & -\mu_O
         \end{array} \right]
@@ -169,19 +169,19 @@ The previous grey-box approach to qubit control of~\cite{youssry2020characteriza
 Substituting~\cref{eq:VO_construction_2} into~\cref{eq:expectation_with_noise} gives,
 \begin{equation}
     \label{eq:expectationWithNoise3}
- \mathbb{E}\{O(T)\}_\rho = \mathrm{Tr}\left[Q_{O}D_{O}Q_{O}^{\dagger} U_{\mathrm{ctrl}} \rho U_{\mathrm{ctrl}}^{\dagger}\right]
+    \mathbb{E}\{O(T)\}_\rho = \mathrm{Tr}\left[Q_{O}D_{O}Q_{O}^{\dagger} U_{\mathrm{ctrl}} \rho U_{\mathrm{ctrl}}^{\dagger}\right]
 \end{equation}
 
 To calculate the mapping between expectations and $Q_{O}D_{O}Q_{O}^{\dagger}$, one must understand \textit{a priori} the generalised structure of $Q_{O}D_{O}Q_{O}^{\dagger}$. Recalling the definition of $Q_O$, we find $ Q_{O}D_{O}Q_{O}^{\dagger}$ is,
 \begin{equation}
- \left[ \begin{array}{cc}
+    \left[ \begin{array}{cc}
             \mu_O\cos(2\theta_O)
              &
- -e^{2i\psi_O}\mu_O\sin(2\theta_O)
+            -e^{2i\psi_O}\mu_O\sin(2\theta_O)
             \\
- -e^{-2i\psi_O}\mu_O\sin(2\theta_O)
+            -e^{-2i\psi_O}\mu_O\sin(2\theta_O)
              &
- -\mu_O\cos(2\theta_O)
+            -\mu_O\cos(2\theta_O)
         \end{array} \right] = \left[ \begin{array}{cc}
             \gamma_O             & \alpha_O - \beta_O i \\
             \alpha_O + \beta_O i & -\gamma_O
@@ -191,37 +191,37 @@ with $-1 \leq \alpha_O, \beta_O, \gamma_O \leq 1$.
 
 Now $U_{\mathrm{ctrl}} \rho U_{\mathrm{ctrl}}^{\dagger}$ must be Hermitian, with trace one, such that,
 \begin{equation}
- U_{\mathrm{ctrl}} \rho U_{\mathrm{ctrl}}^{\dagger} = \left[\begin{array}{cc}
- a_{\rho}             & b_{\rho} - c_{\rho}i \\
- b_{\rho} + c_{\rho}i & 1 - a_{\rho}
+    U_{\mathrm{ctrl}} \rho U_{\mathrm{ctrl}}^{\dagger} = \left[\begin{array}{cc}
+            a_{\rho}             & b_{\rho} - c_{\rho}i \\
+            b_{\rho} + c_{\rho}i & 1 - a_{\rho}
         \end{array}\right] \label{eq:uctrl_rho_uctrl_dag}
 \end{equation}
 with $0 \leq a_{\rho}, b_{\rho}, c_{\rho} \leq 1$.
 
 We can now calculate the generalised form of $\mathbb{E}\{O(T)\}_\rho$ in terms of the newly introduced parameters,
 \begin{equation}
- \mathbb{E}\{O(T)\}_\rho = 2 b_{\rho} \alpha_{O}  + 2 c_{\rho} \beta_{O} + (2a_{\rho} - 1)\gamma_{O} \label{eq:expectation_as_function_of_parameters}
+    \mathbb{E}\{O(T)\}_\rho = 2 b_{\rho} \alpha_{O}  + 2 c_{\rho} \beta_{O} + (2a_{\rho} - 1)\gamma_{O} \label{eq:expectation_as_function_of_parameters}
 \end{equation}
 
 For each observable, there are six initial states, so to find solutions $\alpha_{O}, \beta_{O}, \gamma_{O}$ for each observable, we need to solve an over-determined system of six equations with three unknowns,
 \begin{equation} \label{eq:overdetermined-full-definition}
- \left[\begin{array}{ccc}
+    \left[\begin{array}{ccc}
             2b_{\rho_{x_+}} & 2c_{\rho_{x_+}} & (2a_{\rho_{x_+}} - 1) \\
             2b_{\rho_{x_-}} & 2c_{\rho_{x_-}} & (2a_{\rho_{x_+}} - 1) \\
             \vdots          & \vdots          & \vdots                \\
             2b_{\rho_{z_-}} & 2c_{\rho_{z_-}} & (2a_{\rho_{z_-}} - 1) \\
         \end{array}\right]
- \left[\begin{array}{c}
+    \left[\begin{array}{c}
             \alpha_{O} \\
             \beta _{O} \\
             \gamma_{O} \\
         \end{array}\right]
- =
- \left[\begin{array}{c}
- \mathbb{E}\{O\}_{\rho_{x_+}} \\
- \mathbb{E}\{O\}_{\rho_{x_-}} \\
+    =
+    \left[\begin{array}{c}
+            \mathbb{E}\{O\}_{\rho_{x_+}} \\
+            \mathbb{E}\{O\}_{\rho_{x_-}} \\
             \vdots                       \\
- \mathbb{E}\{O\}_{\rho_{z_-}}
+            \mathbb{E}\{O\}_{\rho_{z_-}}
         \end{array}\right]
 \end{equation}
 with $\rho_{x_+}, \rho_{x_-}, \ldots, \rho_{z_-}$ being the standard eigenstates of the Pauli matrices.
@@ -246,7 +246,7 @@ To find the best fit solution for~\cref{eq:overdetermined-full-definition}, we u
 
 To test and verify the methods of~\cref{subsec:deducing_noise_operators} we used ground truth expectations and the corresponding $V_O$ operators from \textit{QDataSet}~\cite{perrier2022qdataset}. A batch of 1000 expectations was used to derive the parameters $\mu_O$, $\theta_O$, and $\psi_O$, with a total time of $0.52 \pm 0.05$ ms.
 \subsection{Quantum Simulation Implementation \label{subsec:quantum_simulation_implementation}}
-Our quantum simulator followed the formalism defined in~\cref{sec:noise_operator_formalism} and was implemented in \textit{Pytorch}~\cite{paszke2019pytorch}. We noted inefficiencies in the simulator of~\cite{perrier2022qdataset}, which led to long execution times, motivating the need for a redesigned simulator to allow frequent and fast experiments. In the redesigned simulator, an overall improvement was using tensor operations whenever possible for the operations presented in~\cref{sec:noise_operator_formalism}. 
+Our quantum simulator followed the formalism defined in~\cref{sec:noise_operator_formalism} and was implemented in \textit{Pytorch}~\cite{paszke2019pytorch}. We noted inefficiencies in the simulator of~\cite{perrier2022qdataset}, which led to long execution times, motivating the need for a redesigned simulator to allow frequent and fast experiments. In the redesigned simulator, an overall improvement was using tensor operations whenever possible for the operations presented in~\cref{sec:noise_operator_formalism}.
 
 Our simulator further reduced execution time by computing the unitary at timestep $t$ via left multiplying the unitary at time step $t-1$ by the exponentiated Hamiltonian at time step $t$. This method was not used in the previous simulator to compute unitaries, and instead, unitaries were computed via recomputing the entire product of required exponentiated Hamiltonians.
 
@@ -270,7 +270,7 @@ The second noise process `$1/f$ + bump' was chosen because it shared similaritie
 
 Control pulses were applied along the $x$-axis for all simulations, where the control pulses were approximations of CPMG pulses. To achieve CPMG pulses, we created Gaussian-shaped pulses of the form
 \begin{equation} \label{eq:gaussian_pulse}
- f_{j}(t)=\sum_{n=1}^{n_{\max }} A_n e^{-\frac{\left(t-\tau_{n}\right)^{2}}{2 \sigma^{2}}}
+    f_{j}(t)=\sum_{n=1}^{n_{\max }} A_n e^{-\frac{\left(t-\tau_{n}\right)^{2}}{2 \sigma^{2}}}
 \end{equation}
 where $\sigma=\frac{T}{\lambda M}$, $\lambda \in \mathbb{R}^+$ is the pulse width, $T$ is the total time, $M$ is the number of time steps, $\tau_{n}=\left(\frac{n-0.5}{n_{\max }}\right) T+\delta_{\tau}$, with $\delta_{\tau} \in \mathbb{R}$ being used to add jitter to the pulse timing, and $A_n$ is the amplitude of the $n^{\mathrm{th}}$ pulse. For all experiments, the number of pulses was $n_{\max}=5$, 1024 discrete time steps were used and ensemble averaging was performed over 2000 realisations of the noise process for a given control pulse sequence.
 
@@ -279,12 +279,12 @@ We conducted a series of simulations to test the ability of the quantum feature 
 
 While simulating a qubit in the presence of the realisation of an unknown noise process, we used more realistic CPMG pulses; the pulse width was increased, and jitter was added to the peak's timing and value. From the realistic CPMG pulses, we ended up with a cluster of points in the feature space arising from distinct realisations of the jitter. In a black box manner, we identify which noise process characterises the unknown noise process by measuring which \textit{a priori} noise process the cluster of points was closest to in the quantum feature space.
 
-To simulate ideal CPMG pulses, we set $\lambda = \frac{1}{96}$, $\delta_{\tau} = 0$, $n_{\max} = 5$, and $A_n = \pi$. These values were chosen to approximate delta function pulses, shown in the top panel of~\cref{fig:control_pulses_visualisation}. For the realistic CPMG pulses we set $\lambda = \frac{1}{24}$, $\delta_{\tau}$ was chosen from a uniform random distribution spanning the interval $[-\frac{24T}{M}, \frac{24T}{M}]$, and $A_n = \pi + \epsilon$ where $\epsilon$ was drawn from a uniform random distribution spanning the interval $[-\frac{\pi}{5}, \frac{\pi}{5}]$. This is shown in the bottom panel of~\cref{fig:control_pulses_visualisation}. Fifty such unique realistic control pulse sequences were generated with ensemble averaging over 2000 noise process realisations for each control pulse, resulting in a cluster of 50 unique points in the quantum feature space.
+To simulate ideal CPMG pulses, we set $\lambda = \frac{1}{96}$, $\delta_{\tau} = 0$, $n_{\max} = 5$, and $A_n = \pi$. These values were chosen to approximate delta function pulses, shown in~\cref{fig:control_pulses_visualisation}(a). For the realistic CPMG pulses, shown in~\cref{fig:control_pulses_visualisation}(b), we set $\lambda = \frac{1}{24}$, $\delta_{\tau}$ was chosen from a uniform random distribution spanning the interval $[-\frac{24T}{M}, \frac{24T}{M}]$, and $A_n = \pi + \epsilon$ where $\epsilon$ was drawn from a uniform random distribution spanning the interval $[-\frac{\pi}{5}, \frac{\pi}{5}]$. This is s. Fifty such unique realistic control pulse sequences were generated with ensemble averaging over 2000 noise process realisations for each control pulse, resulting in a cluster of 50 unique points in the quantum feature space.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/control_pulses.pdf}
-    \caption{Control pulses used in the simulations. The top row shows the ideal CPMG pulses and the bottom row shows the realistic CPMG pulses.}
+    \caption{Control pulses used in the simulations. (a) shows the ideal CPMG pulses and (b) shows the realistic CPMG pulses.}
     \label{fig:control_pulses_visualisation}
 \end{figure}
 
@@ -302,7 +302,7 @@ To refine our classification of the unknown noise process, using the results of 
         $V_y$ & 0.303          & 0.307          & \textbf{0.246} & 0.269             & 0.812    & 0.857         \\
         $V_z$ & \textbf{0.290} & 0.297          & 0.304          & 0.293             & 0.687    & 0.621         \\
         \midrule
- Total & 0.991          & 0.973          & \textbf{0.929} & 0.943             & 2.326    & 2.402         \\
+        Total & 0.991          & 0.973          & \textbf{0.929} & 0.943             & 2.326    & 2.402         \\
         \bottomrule
     \end{tabular}
     \caption{Average Euclidean distances between realistic data points and the corresponding noise process values in the feature spaces of \(Q_X\), \(Q_Y\), and \(Q_Z\). For each \(V_O\) (row), the lowest (best) value is bolded. The total distance is the sum of the distances across all three feature spaces. The overall closest noise process is the `$1/f$ + bump' noise process, with the smallest total distance as bolded. NS indicates non-stationary noise processes.}
@@ -319,7 +319,7 @@ To refine our classification of the unknown noise process, using the results of 
         $V_y$ & 0.241            & 0.239            & 0.226            & 0.153             & \textbf{0.108}    & 0.578             \\
         $V_z$ & 0.296            & 0.282            & 0.303            & 0.292             & \textbf{0.279}    & 0.286             \\
         \midrule
- Total & 0.903            & 0.885            & 0.896            & 0.767             & \textbf{0.666}    & 1.422             \\
+        Total & 0.903            & 0.885            & 0.896            & 0.767             & \textbf{0.666}    & 1.422             \\
         \bottomrule
     \end{tabular}
     \caption{Average Euclidean distances between realistic data points and the corresponding noise process values in the feature spaces of \(Q_X\), \(Q_Y\), and \(Q_Z\). For each \(V_O\) (row), the lowest (best) value is bolded. The total distance is the sum of the distances across all three feature spaces. The overall closest noise process is the $240^\mathrm{th}$ noise profile, as indicated by the lowest total distance.}
@@ -340,11 +340,11 @@ We then explored the ability of simple ML algorithms to use this quantum feature
     \begin{tabular}{|l|l|l|}
         \hline
         \textbf{Noise Profile Type} & \textbf{Parameter}           & \textbf{Range/Value} \\ \hline
-        $1/f$                 & $\alpha$                     & [0.7, 1.3]           \\ \hline
- `$1/f$ + Bump'       & $\mu$                        & [0, 256]             \\ \cline{2-3}
+        $1/f$                       & $\alpha$                     & [0.7, 1.3]           \\ \hline
+        `$1/f$ + Bump'              & $\mu$                        & [0, 256]             \\ \cline{2-3}
                                     & $\alpha$                     & [0.7, 1.3]           \\ \hline
- Coloured              & Division Factor              & [2, 16]              \\ \hline
- Non-Stationary              & Peak of deterministic signal & [0.1$T$, 0.9$T$]     \\ \hline
+        Coloured                    & Division Factor              & [2, 16]              \\ \hline
+        Non-Stationary              & Peak of deterministic signal & [0.1$T$, 0.9$T$]     \\ \hline
     \end{tabular}
     \caption{Summary of noise profile characteristics.}
     \label{tab:noise_params}
@@ -358,9 +358,9 @@ The feature importances for stationarity and noise type classification are shown
     \centering
     \begin{tabular}{|l|c c c|c c c|c c c|}
         \hline
- Classification Task & \(\alpha_X\) & \(\beta_X\) & \(\gamma_X\) & \(\alpha_Y\) & \(\beta_Y\) & \(\gamma_Y\) & \(\alpha_Z\) & \(\beta_Z\) & \(\gamma_Z\) \\ \hline
- Stationarity        & 0.22         & 0.08        & 0.16         & 0.08         & 0.15        & 0.03         & 0.05         & 0.08        & 0.15         \\ \hline
- Noise Type          & 0.09         & 0.14        & 0.07         & 0.15         & 0.13        & 0.08         & 0.03         & 0.03        & 0.28         \\ \hline
+        Classification Task & \(\alpha_X\) & \(\beta_X\) & \(\gamma_X\) & \(\alpha_Y\) & \(\beta_Y\) & \(\gamma_Y\) & \(\alpha_Z\) & \(\beta_Z\) & \(\gamma_Z\) \\ \hline
+        Stationarity        & 0.22         & 0.08        & 0.16         & 0.08         & 0.15        & 0.03         & 0.05         & 0.08        & 0.15         \\ \hline
+        Noise Type          & 0.09         & 0.14        & 0.07         & 0.15         & 0.13        & 0.08         & 0.03         & 0.03        & 0.28         \\ \hline
     \end{tabular}
     \caption{Feature importances represent the average contributions of the features \(\alpha\), \(\beta\), and \(\gamma\) for each of the Quantum Feature Spaces \(Q_X\), \(Q_Y\), and \(Q_Z\) to the classification task. The feature importances are normalised to sum to 1.}
     \label{tab:feature_importances}
@@ -378,7 +378,7 @@ The results in~\cref{fig:vo_space_with_changing_parameters}(b) are similar and s
 We then investigated the impact of increasing the signal energy of the `$1/f$ + bump' and coloured Gaussian noise processes.  Signal energy here is defined as,
 \begin{equation}
     \label{eq:signal_energy}
- E = \sum_{t=1}^{N} \left|n_t\right|^2
+    E = \sum_{t=1}^{N} \left|n_t\right|^2
 \end{equation}
 where $n_t$ is the noise process value at time step $t$ and $N$ is the total number of time steps. To implement increasing energy, we scaled all values of a given noise realisation (i.e. all $n_t$) by a constant using the following scale factors: 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75.
 
