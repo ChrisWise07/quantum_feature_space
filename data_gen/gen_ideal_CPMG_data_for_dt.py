@@ -158,7 +158,7 @@ def main() -> None:
         end = (i + 1) * batch_size
 
         alpha_beta_gamma_sols[start:end] = (
-            STANDARD_QUBIT_SIM.compute_alpha_beta_gamma_sols_for_control_and_noise(
+            STANDARD_QUBIT_SIM.compute_qfs_from_control_and_noise(
                 all_timesteps_control_unitaries=all_timesteps_control_unitaries,
                 noise=precomputed_noise[start:end].to(DEVICE),
             )

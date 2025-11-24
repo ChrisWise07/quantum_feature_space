@@ -1,5 +1,8 @@
 import time
 import torch
+import cProfile
+import pstats
+from io import StringIO
 
 from qubit_sim.qubit_sim_class import QubitSimulator
 from qubit_sim.constants import SIGMA_X, SIGMA_Z, SIGMA_Y, DEVICE, QUBIT_ENERGY_GAP
@@ -22,7 +25,7 @@ from data_gen.data_gen_sim_constants import (
 torch.manual_seed(0)
 
 number_of_noise_realizations = 2000
-total_examples = 500
+total_examples = 100
 
 coloured_noise_ns = ColouredGaussianNoiseGenerator(
     number_of_noise_realisations=number_of_noise_realizations,
@@ -49,7 +52,7 @@ STANDARD_QUBIT_SIM = QubitSimulator(
 
 
 def main() -> None:
-    batch_size = 7
+    batch_size = 5
     num_batches = total_examples // batch_size + 1
     start = time.time()
 
@@ -77,12 +80,12 @@ def main() -> None:
             total_num_examples=total_size,
         )
 
-        qdq_dagger_matrices = STANDARD_QUBIT_SIM.compute_qdq_dag_operators(
+        qfs_operators = STANDARD_QUBIT_SIM.compute_qfs_operators(
             all_timesteps_control_unitaries, noise
         )
 
         expectation_values[start_index:end_index] = calculate_expectation_values(
-            qdq_dagger_matrices=qdq_dagger_matrices,
+            qfs_operators=qfs_operators,
             control_unitaries=all_timesteps_control_unitaries[:, -1],
         )
 
@@ -91,4 +94,26 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    pr = cProfile.Profile()
+    pr.enable()
+
     main()
+
+    pr.disable()
+    s = StringIO()
+    sortby = "cumulative"  # Sort by cumulative time spent in the function and its subfunctions
+    ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+    ps.print_stats()
+    print(s.getvalue())
+
+    # To get a "tree-like" view, you can print a more limited number of lines
+    # and then manually inspect the output, or use external tools.
+    # For instance, you can save to a file and use 'gprof2dot' for visualization.
+    with open("profile_output.txt", "w") as f:
+        ps.print_stats(f)
+
+    print("\nDetailed profile saved to profile_output.txt")
+    print("You can use tools like gprof2dot to visualize the call graph:")
+    print(
+        "python -m gprof2dot -f pstats profile_output.txt | dot -Tpng -o profile_output.png"
+    )

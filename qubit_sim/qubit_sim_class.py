@@ -7,9 +7,10 @@ from qubit_sim.qubit_sim_funcs import (
     construct_hamiltonian_for_each_timestep_noise_relisation_batchwise,
     return_exponentiated_scaled_hamiltonians,
     compute_unitary_at_timestep,
-    compute_unitaries_for_all_time_steps,
-    create_interaction_hamiltonian_for_each_timestep_noise_relisation_batchwise,
-    construct_batch_of_q_d_q_dag_operators,
+    create_interaction_hamiltonians_for_each_timestep_noise_relisation_batchwise,
+    construct_batch_of_qfs_operators,
+    compute_unitaries_for_all_time_steps_with_non_commuting_hamiltonians,
+    compute_unitaries_for_all_time_steps_with_commuting_hamiltonians,
 )
 
 
@@ -54,6 +55,25 @@ class QubitSimulator:
     control_dynamic_operators: torch.Tensor
     control_static_operators: Optional[torch.Tensor] = None
     ideal_matrices: Optional[torch.Tensor] = None
+    commuting_control_hamiltonians: bool = False
+    commuting_noise_hamiltonians: bool = False
+
+    def __post_init__(self):
+        if self.commuting_control_hamiltonians:
+            self.compute_unitaries_for_all_time_steps_func = (
+                lambda h,
+                dt: compute_unitaries_for_all_time_steps_with_commuting_hamiltonians(
+                    h, dt
+                )
+            )
+
+        else:
+            self.compute_unitaries_for_all_time_steps_func = (
+                lambda h,
+                dt: compute_unitaries_for_all_time_steps_with_non_commuting_hamiltonians(
+                    return_exponentiated_scaled_hamiltonians(h, dt)
+                )
+            )
 
     def set_max_amp(self, max_amp: float):
         """
@@ -82,7 +102,7 @@ class QubitSimulator:
         else:
             batched_static_operators = None
 
-        control_hamiltonian = (
+        control_hamiltonians = (
             construct_hamiltonian_for_each_timestep_noise_relisation_batchwise(
                 time_evolving_elements=control_pulse_time_series * self.max_amp,
                 operators_for_time_evolving_elements=batched_control_operators,
@@ -90,24 +110,18 @@ class QubitSimulator:
             )
         )
 
-        exponentiated_scaled_hamiltonians_ctrl = (
-            return_exponentiated_scaled_hamiltonians(
-                hamiltonians=control_hamiltonian,
-                delta_T=self.delta_t,
-            )
+        return self.compute_unitaries_for_all_time_steps_func(
+            h=control_hamiltonians,
+            dt=self.delta_t,
         )
 
-        return compute_unitaries_for_all_time_steps(
-            exponential_hamiltonians=exponentiated_scaled_hamiltonians_ctrl,
-        )
-
-    def compute_qdq_dag_operators(
+    def compute_qfs_operators(
         self,
         all_timesteps_control_unitaries: torch.Tensor,
-        noise: Optional[torch.Tensor] = None,
+        noise: torch.Tensor,
     ) -> torch.Tensor:
         """
-        Compute the qdq_dag operators for the given control unitary
+        Compute the qfs operators for the given control unitary
         time series.
 
         Args:
@@ -136,37 +150,35 @@ class QubitSimulator:
             total_num_examples, 1, 1, 1
         )
 
-        noise_hamiltonian = (
+        noise_hamiltonians = (
             construct_hamiltonian_for_each_timestep_noise_relisation_batchwise(
                 time_evolving_elements=noise,
                 operators_for_time_evolving_elements=batched_noise_operators,
             )
         )
 
-        interaction_hamiltonian = (
-            create_interaction_hamiltonian_for_each_timestep_noise_relisation_batchwise(
-                control_unitaries=all_timesteps_control_unitaries,
-                noise_hamiltonians=noise_hamiltonian,
-            )
+        interaction_hamiltonians = create_interaction_hamiltonians_for_each_timestep_noise_relisation_batchwise(
+            control_unitaries=all_timesteps_control_unitaries,
+            noise_hamiltonians=noise_hamiltonians,
         )
 
-        exponentiated_scaled_hamiltonians_interaction = (
+        exponentiated_scaled_interaction_hamiltonians = (
             return_exponentiated_scaled_hamiltonians(
-                hamiltonians=interaction_hamiltonian,
+                hamiltonians=interaction_hamiltonians,
                 delta_T=self.delta_t,
             )
         )
 
         final_timestep_interaction_unitaries = compute_unitary_at_timestep(
-            exponential_hamiltonians=exponentiated_scaled_hamiltonians_interaction,
+            exponential_hamiltonians=exponentiated_scaled_interaction_hamiltonians,
         )
 
-        return construct_batch_of_q_d_q_dag_operators(
+        return construct_batch_of_qfs_operators(
             final_step_control_unitaries=all_timesteps_control_unitaries[:, -1],
-            final_step_interaction_unitaries=final_timestep_interaction_unitaries,
+            final_timestep_interaction_unitaries=final_timestep_interaction_unitaries,
         )
 
-    def compute_alpha_beta_gamma_sols_for_control_and_noise(
+    def compute_qfs_from_control_and_noise(
         self,
         all_timesteps_control_unitaries: torch.Tensor,
         noise: Optional[torch.Tensor] = None,
@@ -197,13 +209,13 @@ class QubitSimulator:
                     system_dimension,
                 )
         """
-        qdq_dag_ops = self.compute_qdq_dag_operators(
+        qfs_operators = self.compute_qfs_operators(
             all_timesteps_control_unitaries=all_timesteps_control_unitaries,
             noise=noise,
         )
 
-        alpha_sols = torch.real(qdq_dag_ops[:, :, 0, 1])
-        beta_sols = -torch.imag(qdq_dag_ops[:, :, 0, 1])
-        gamma_sols = torch.real(qdq_dag_ops[:, :, 0, 0])
+        alpha_sols = torch.real(qfs_operators[:, :, 0, 1])
+        beta_sols = -torch.imag(qfs_operators[:, :, 0, 1])
+        gamma_sols = torch.real(qfs_operators[:, :, 0, 0])
         stacked = torch.stack((alpha_sols, beta_sols, gamma_sols), dim=2)
-        return stacked.reshape(qdq_dag_ops.shape[0], -1)
+        return stacked.reshape(qfs_operators.shape[0], -1)

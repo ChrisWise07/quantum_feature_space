@@ -80,11 +80,9 @@ def main() -> None:
         )
     )
 
-    alpha_beta_gamma_sols = (
-        STANDARD_QUBIT_SIM.compute_alpha_beta_gamma_sols_for_control_and_noise(
-            all_timesteps_control_unitaries=all_timesteps_control_unitaries,
-            noise=precomputed_noise_scaled.to(DEVICE),
-        )
+    alpha_beta_gamma_sols = STANDARD_QUBIT_SIM.compute_qfs_from_control_and_noise(
+        all_timesteps_control_unitaries=all_timesteps_control_unitaries,
+        noise=precomputed_noise_scaled.to(DEVICE),
     )
 
     data_frame = pd.DataFrame(

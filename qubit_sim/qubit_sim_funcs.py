@@ -1,4 +1,5 @@
 import torch
+import math
 
 from typing import Optional
 from .utils import return_conjugate_transpose_of_matrices
@@ -141,6 +142,12 @@ def return_exponentiated_scaled_hamiltonians(
                 system_dimension
             )
     """
+    # L, Q = torch.linalg.eigh(hamiltonians)
+    # return (
+    #     Q
+    #     @ (torch.diag_embed(torch.exp(-1j * delta_T * L))).cfloat()
+    #     @ Q.conj().transpose(-1, -2)
+    # )
     scaled_hamiltonian = hamiltonians * (-1j * delta_T)
     return torch.linalg.matrix_exp(scaled_hamiltonian)
 
@@ -179,33 +186,69 @@ def compute_unitary_at_timestep(
                 system_dimension
             )
     """
-    (
-        _,
-        num_time_steps,
-        *_,
-    ) = exponential_hamiltonians.shape
+    product_sequence = exponential_hamiltonians.clone()
+    num_time_steps = product_sequence.shape[1]
 
-    if num_time_steps == 1:
-        return exponential_hamiltonians[:, 0]
+    while num_time_steps > 1:
+        if num_time_steps % 2 == 1:
+            last_matrix = product_sequence[:, -1:]
+            product_sequence = product_sequence[:, :-1]
+        else:
+            last_matrix = None
 
-    if num_time_steps % 2 == 1:
-        last_matrix = exponential_hamiltonians[:, -1:]
-        exponential_hamiltonians = exponential_hamiltonians[:, :-1]
-    else:
-        last_matrix = None
+        even_matrices = product_sequence[:, 0::2]
+        odd_matrices = product_sequence[:, 1::2]
+        product_sequence = torch.matmul(odd_matrices, even_matrices)
 
-    even_exponential_hamiltonians = exponential_hamiltonians[:, 0::2]
-    odd_exponential_hamiltonians = exponential_hamiltonians[:, 1::2]
+        if last_matrix is not None:
+            product_sequence = torch.cat([product_sequence, last_matrix], dim=1)
 
-    product = torch.matmul(odd_exponential_hamiltonians, even_exponential_hamiltonians)
+        num_time_steps = product_sequence.shape[1]
 
-    if last_matrix is not None:
-        product = torch.cat([product, last_matrix], dim=1)
-
-    return compute_unitary_at_timestep(product)
+    return product_sequence.squeeze(1)
 
 
-def compute_unitaries_for_all_time_steps(
+def compute_unitaries_for_all_time_steps_with_commuting_hamiltonians(
+    hamiltonians: torch.Tensor,
+    delta_T: float,
+) -> torch.Tensor:
+    """
+    Computes the unitaries for all time steps for the given batch of
+    Hamiltonians assuming that the Hamiltonians commute. This is a
+    special case of the Trotter-Suzuki decomposition where the
+    Hamiltonians are assumed to commute.
+
+    Args:
+        hamiltonians (torch.Tensor):
+            Hamiltonian for which to compute the evolution operator.
+            Expected Shape:
+            (
+                batch_size,
+                num_timesteps,
+                number_of_realisations (optional),
+                system_dimension,
+                system_dimension
+            )
+        delta_T (float):
+            Time step for the evolution.
+
+    Returns:
+        torch.Tensor:
+            Resulting unitary evolution operators of shape:
+            (
+                batch_size,
+                num_timesteps,
+                number_of_realisations (optional),
+                system_dimension,
+                system_dimension
+            )
+    """
+    return return_exponentiated_scaled_hamiltonians(
+        torch.cumsum(hamiltonians, dim=1), delta_T=delta_T
+    )
+
+
+def compute_unitaries_for_all_time_steps_with_non_commuting_hamiltonians(
     exponential_hamiltonians: torch.Tensor,
 ) -> torch.Tensor:
     """
@@ -238,21 +281,19 @@ def compute_unitaries_for_all_time_steps(
                 system_dimension
             )
     """
+    num_timesteps = exponential_hamiltonians.shape[1]
+    unitaries = exponential_hamiltonians.clone()
 
-    result_unitaries = torch.empty_like(exponential_hamiltonians)
+    for i in range(math.ceil(math.log2(num_timesteps))):
+        stride = 2**i
+        prev_unitaries = unitaries[:, :-stride, ...].clone()
+        current_unitaries = unitaries[:, stride:, ...]
+        unitaries[:, stride:, ...] = current_unitaries @ prev_unitaries
 
-    result_unitaries[:, 0, ...] = exponential_hamiltonians[:, 0, ...]
-
-    for time_step in range(1, exponential_hamiltonians.shape[1]):
-        result_unitaries[:, time_step, ...] = (
-            exponential_hamiltonians[:, time_step, ...]
-            @ result_unitaries[:, time_step - 1, ...].clone()
-        )
-
-    return result_unitaries
+    return unitaries
 
 
-def create_interaction_hamiltonian_for_each_timestep_noise_relisation_batchwise(
+def create_interaction_hamiltonians_for_each_timestep_noise_relisation_batchwise(
     control_unitaries: torch.Tensor,
     noise_hamiltonians: torch.Tensor,
 ) -> torch.Tensor:
@@ -273,7 +314,7 @@ def create_interaction_hamiltonian_for_each_timestep_noise_relisation_batchwise(
                 system_dimension,
                 system_dimension
             )
-        noise_hamiltonians (torch.Tensor):
+        system_bath_hamiltonians (torch.Tensor):
             Hamiltonian for the noise part of the Hamiltonian.
             Expected Shape:
             (
@@ -301,9 +342,10 @@ def create_interaction_hamiltonian_for_each_timestep_noise_relisation_batchwise(
         control_unitaries_expanded
     ).transpose(-1, -2)
 
-    return torch.matmul(
-        control_unitaries_expanded_dagger,
-        torch.matmul(noise_hamiltonians, control_unitaries_expanded),
+    return (
+        control_unitaries_expanded_dagger
+        @ noise_hamiltonians
+        @ control_unitaries_expanded
     )
 
 
@@ -349,12 +391,12 @@ def __return_observables_for_vo_construction(
     return COMBINED_SIGMA_TENSOR_TWO_QUBITS
 
 
-def construct_batch_of_q_d_q_dag_operators(
+def construct_batch_of_qfs_operators(
     final_step_control_unitaries: torch.Tensor,
-    final_step_interaction_unitaries: torch.Tensor,
+    final_timestep_interaction_unitaries: torch.Tensor,
 ) -> torch.Tensor:
     """
-    Constructs the QDQ_dag operators for the given batch of unitary
+    Constructs the QFS operators for the given batch of unitary
     interaction operators. Note the vo operator are stored in the
     order of X operator, Y operator, Z operator.
 
@@ -393,19 +435,19 @@ def construct_batch_of_q_d_q_dag_operators(
         return_conjugate_transpose_of_matrices(final_step_control_unitaries_expanded)
     )
 
-    final_step_interaction_unitaries_tilde = (
+    final_timestep_mod_interaction_unitaries = (
         final_step_control_unitaries_expanded
-        @ final_step_interaction_unitaries
+        @ final_timestep_interaction_unitaries
         @ final_step_control_unitaries_expanded_dagger
     )
 
-    final_step_interaction_unitaries_tilde_expanded = (
-        final_step_interaction_unitaries_tilde.unsqueeze(1)
+    final_timestep_mod_interaction_unitaries_expanded = (
+        final_timestep_mod_interaction_unitaries.unsqueeze(1)
     )
 
-    final_step_interaction_unitaries_tilde_dagger = (
+    final_timestep_mod_interaction_unitaries_dagger = (
         return_conjugate_transpose_of_matrices(
-            final_step_interaction_unitaries_tilde_expanded
+            final_timestep_mod_interaction_unitaries_expanded
         )
     )
 
@@ -414,38 +456,7 @@ def construct_batch_of_q_d_q_dag_operators(
     ).unsqueeze(2)
 
     return (
-        final_step_interaction_unitaries_tilde_dagger
+        final_timestep_mod_interaction_unitaries_dagger
         @ observables
-        @ final_step_interaction_unitaries_tilde_expanded
+        @ final_timestep_mod_interaction_unitaries_expanded
     ).mean(dim=NOISE_DIM)
-
-
-def return_alpha_beta_sols_from_qdq_dag_operators(
-    qdq_dag_operators: torch.Tensor,
-) -> torch.Tensor:
-    """
-    Returns the alpha, beta, gamma solutions from the given batch of
-    QDQ_dag operators. The QDQ_dag operators are assumed to be in the
-    order of X operator, Y operator, Z operator.
-
-    Args:
-        qdq_dag_operators (torch.Tensor):
-            QDQ_dag operators. Expected Shape:
-            (
-                batch_size,
-                3,
-                system_dimension,
-                system_dimension
-            )
-
-    Returns:
-        torch.Tensor:
-            The alpha, beta, gamma solutions. Expected Shape:
-            (
-                batch_size,
-                3,
-                2,
-                2
-            )
-    """
-    return qdq_dag_operators.reshape(qdq_dag_operators.shape[0], 3, 2, 2)
